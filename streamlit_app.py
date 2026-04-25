@@ -48,7 +48,7 @@ initalize_state()
 def login():
     with st.form("Login Form"):
         st.title("Login")
-        username = st.text_input("Enter your Username")
+        username = st.text_input("Enter your Email")
         password = st.text_input("Enter your Password", type="password")
         
         if st.form_submit_button("Login"):

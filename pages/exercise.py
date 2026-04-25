@@ -72,7 +72,7 @@ def exercise():
     if st.session_state.get('user_questions') is not None:
         if st.button("🚀 Generate Exercise Plan", key="exercise_generate_button"):
             answer = st.session_state['user_questions']
-            user_prompt = f"the user is {answer['email']} and the user is {answer['age']} years old, and the user is born on {answer['birth']} and the user is {answer['gender']} and the user has {answer['access']} access to a gym and the user weighs {answer['weight']} pounds and the user is {answer['height']} feet tall and the user has allergies of {answer['allergies']} and the user's diet is {answer['diet']} and the user's health conditions are {answer['health']} and the user's goal is {answer['goal']} with a timeline of {answer['timeline']} and activity level is {answer['activity_level']} and sleep patterns are {answer['sleep_patterns']} and daily schedule is {answer['daily_schedule']}"
+            user_prompt = f"the user is {answer['email']} and the user is {answer['age']} years old, and the user is {answer['gender']} and the user {'has' if answer['gym_access'] else 'does not have'} access to a gym and the user weighs {answer['weight']} pounds and the user is {answer['height']} feet tall and the user has allergies of {answer['allergies']} and the user's diet is {answer['diet']} and the user's health conditions are {answer['health']} and the user's goal is {answer['goal']} with a timeline of {answer['timeline']} and activity level is {answer['activity_level']} and sleep patterns are {answer['sleep_patterns']} and daily schedule is {answer['daily_schedule']}"
 
             response = get_json_response(system_prompt, user_prompt)
 

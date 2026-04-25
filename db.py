@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from supabase import create_client
 
@@ -60,10 +61,10 @@ def sign_out():
 def save_profile(user_id: str, data: dict):
     """Upsert onboarding answers for this user."""
     sb = get_supabase()
-    sb.table("profiles").upsert({"id": user_id, **data}).execute()
+    sb.table("profiles").upsert({"user_id": user_id, **data}).execute()
 
 def get_profile(user_id: str):
     """Return the profile row, or None if it doesn't exist yet."""
     sb = get_supabase()
-    res = sb.table("profiles").select("*").eq("id", user_id).maybe_single().execute()
+    res = sb.table("profiles").select("*").eq("user_id", user_id).maybe_single().execute()
     return res.data          # dict or None

@@ -1,6 +1,5 @@
 import streamlit as st
 
-from pages import AI
 from pages.choice import choice_plans
 from pages.diet import diet_plans  
 from pages.bodywork import bodywork_plans
