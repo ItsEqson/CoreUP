@@ -24,7 +24,14 @@ Before generating the plan, you must ensure you have the following data points f
 - Daily Schedule: User's daily availability for workouts.
 - User Choice: What the user specifically wants to do (e.g., "Run a 5K", "Get Six Pack Abs", "Deadlift 300lbs", "Lose 20 pounds").
 
-Phase 2: JSON Response Requirements
+Phase 2: Timeline-Based Intensity Scaling
+CRITICAL: Adjust the exercise intensity based on the timeline:
+- 1 month: HIGH intensity, aggressive progression (4-5 days/week, high volume)
+- 3 months: MODERATE-HIGH intensity, steady progression (4 days/week, moderate-high volume)
+- 6 months: MODERATE intensity, sustainable progression (3-4 days/week, moderate volume)
+- 1 year: LOW-MODERATE intensity, long-term sustainability (3 days/week, controlled volume)
+
+Phase 3: JSON Response Requirements
 Once the data is collected, your response must be valid JSON only. Use the following schema:
 
 {
@@ -78,7 +85,7 @@ def choice_plans():
                 st.error("❌ Please enter what you want to achieve.")
             else:
                 answer = st.session_state['user_questions']
-                user_prompt = f"the user is {answer.get('email', 'unknown')} and the user is {answer.get('age', 'unknown')} years old, and the user is {answer.get('gender', 'unknown')} and the user {'has' if answer.get('gym_access') else 'does not have'} access to a gym and the user weighs {answer.get('weight', 'unknown')} pounds and the user is {answer.get('height', 'unknown')} feet tall and the user has allergies of {answer.get('allergies', [])} and the user's diet is {answer.get('diet', [])} and the user's health conditions are {answer.get('health', [])} and the user's goal is {answer.get('goal', 'unknown')} with a timeline of {answer.get('timeline', 'unknown')} and activity level is {answer.get('activity_level', 'unknown')} and sleep patterns are {answer.get('sleep_patterns', 'unknown')} and daily schedule is {answer.get('daily_schedule', 'unknown')}. Most importantly, the user specifically wants to: {user_choice}"
+                user_prompt = f"the user is {answer.get('email', 'unknown')} and the user is {answer.get('age', 'unknown')} years old, and the user is {answer.get('gender', 'unknown')} and the user {'has' if answer.get('gym_access') else 'does not have'} access to a gym and the user weighs {answer.get('weight', 'unknown')} pounds and the user is {answer.get('height', 'unknown')} feet tall and the user has allergies of {answer.get('allergies', [])} and the user's diet is {answer.get('diet', [])} and the user's health conditions are {answer.get('health', [])} and the user's goal is {answer.get('goal', 'unknown')} with a timeline of {answer.get('timeline', 'unknown')} and activity level is {answer.get('activity_level', 'unknown')} and sleep patterns are {answer.get('sleep_patterns', 'unknown')} and daily schedule is {answer.get('daily_schedule', 'unknown')}. Most importantly, the user specifically wants to: {user_choice}. IMPORTANT: Scale the weekly schedule intensity based on the timeline provided."
 
                 response = get_json_response(system_prompt_choice, user_prompt)
 

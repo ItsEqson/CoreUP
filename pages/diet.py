@@ -17,10 +17,16 @@ Dietary Needs: Allergies, restrictions (e.g., Vegan, Keto), and daily schedule.
 
 Equipment: Access to a full gym, home equipment, or bodyweight only.
 
-Phase 2: JSON Response Requirements
+Phase 2: Timeline-Based Intensity Scaling
+CRITICAL: Adjust the exercise intensity based on the timeline:
+- 1 month: HIGH intensity, aggressive progression (4-5 days/week, high volume)
+- 3 months: MODERATE-HIGH intensity, steady progression (4 days/week, moderate-high volume)
+- 6 months: MODERATE intensity, sustainable progression (3-4 days/week, moderate volume)
+- 1 year: LOW-MODERATE intensity, long-term sustainability (3 days/week, controlled volume)
+
+Phase 3: JSON Response Requirements
 Once the data is collected, your response must be valid JSON only. Use the following schema:
 
-JSON
 {
   "assessment": {
     "bmi": "number",
@@ -72,11 +78,11 @@ def diet_plans():
     if st.session_state.get('user_questions') is not None:
         if st.button("🚀 Generate Diet Plan", key="diet_generate_button"):
             answer = st.session_state['user_questions']
-            user_prompt = f"the user is {answer['email']} and the user is {answer['age']} years old, and the user is {answer['gender']} and the user {'has' if answer['gym_access'] else 'does not have'} access to a gym and the user weighs {answer['weight']} pounds and the user is {answer['height']} feet tall and the user has allergies of {answer['allergies']} and the user's diet is {answer['diet']} and the user's health conditions are {answer['health']} and the user's goal is {answer['goal']} with a timeline of {answer['timeline']} and activity level is {answer['activity_level']} and sleep patterns are {answer['sleep_patterns']} and daily schedule is {answer['daily_schedule']}"
+            user_prompt = f"the user is {answer['email']} and the user is {answer['age']} years old, and the user is {answer['gender']} and the user {'has' if answer['gym_access'] else 'does not have'} access to a gym and the user weighs {answer['weight']} pounds and the user is {answer['height']} feet tall and the user has allergies of {answer['allergies']} and the user's diet is {answer['diet']} and the user's health conditions are {answer['health']} and the user's goal is {answer['goal']} with a timeline of {answer['timeline']} and activity level is {answer['activity_level']} and sleep patterns are {answer['sleep_patterns']} and daily schedule is {answer['daily_schedule']}. IMPORTANT: Scale the weekly schedule intensity based on the timeline provided."
 
             response = get_json_response(system_prompt, user_prompt)
 
-            if 'dietary_strategy' in response:
+            if 'dietary_strategy' in response and 'exercise_strategy' in response:
                 st.session_state['diet_plan'] = response
                 st.success("✅ Diet plan generated successfully!")
             else:
@@ -95,10 +101,19 @@ def diet_plans():
                 st.markdown(f"**Meal Cadence:** {response['dietary_strategy']['meal_cadence']}")
                 st.markdown(f"**Prohibited Items:** {', '.join(response['dietary_strategy']['prohibited_items'])}")
 
-            with col2:
                 with st.expander("📅 Sample Day"):
                     for meal in response['dietary_strategy']['sample_day']:
                         st.markdown(f"**{meal['meal_time']} - {meal['label']}**: {meal['description']} (Macros: {meal['macros_estimate']})")
+
+            with col2:
+                st.markdown("### 💪 Exercise Strategy")
+                st.markdown(f"**Program Split:** {response['exercise_strategy']['program_split']}")
+
+                with st.expander("📅 Weekly Schedule"):
+                    for day in response['exercise_strategy']['weekly_schedule']:
+                        st.markdown(f"**Day {day['day_number']}: {day['focus']}**")
+                        for ex in day['exercises']:
+                            st.markdown(f"- {ex['name']}: {ex['sets']} sets, {ex['reps_or_duration']}, rest {ex['rest_period']}")
 
             st.markdown("### ⚠️ Safety Disclaimer")
             st.info(response.get('safety_disclaimer', 'Consult a physician before starting any new diet.'))

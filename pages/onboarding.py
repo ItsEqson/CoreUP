@@ -1,5 +1,6 @@
 import streamlit as st
 import datetime
+from db import save_profile
 
 
 def onboarding():
@@ -43,7 +44,10 @@ def onboarding():
             ["Fat Loss", "Hypertrophy", "Maintenance", "Other"]
         )
 
-        timeline = st.text_input("What is your timeline for achieving this goal? (e.g., 3 months, 6 months)")
+        timeline = st.selectbox(
+            "What is your timeline for achieving this goal?",
+            ["1 month", "3 months", "6 months", "1 year", "Other"]
+        )
 
         activity_level = st.selectbox(
             "What is your current activity level?",
@@ -74,5 +78,9 @@ def onboarding():
                 "daily_schedule": daily_schedule
             }
             st.session_state['user_questions'] = user_questions
+
+            user_id = st.session_state.get('current_user_id')
+            if user_id is not None:
+                save_profile(user_id, user_questions)
 
             st.rerun()

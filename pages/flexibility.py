@@ -23,7 +23,14 @@ Before generating the plan, you must ensure you have the following data points f
 - Sleep Patterns: Average sleep per night.
 - Daily Schedule: User's daily availability for workouts.
 
-Phase 2: JSON Response Requirements
+Phase 2: Timeline-Based Intensity Scaling
+CRITICAL: Adjust the flexibility routine intensity and frequency based on the timeline:
+- 1 month: HIGH frequency, intensive stretching (5-7 days/week, 30-45 min sessions)
+- 3 months: MODERATE-HIGH frequency, steady progression (4-5 days/week, 25-35 min sessions)
+- 6 months: MODERATE frequency, sustainable routine (3-4 days/week, 20-30 min sessions)
+- 1 year: LOW-MODERATE frequency, long-term maintenance (2-3 days/week, 15-25 min sessions)
+
+Phase 3: JSON Response Requirements
 Once the data is collected, your response must be valid JSON only. Use the following schema:
 
 {
@@ -60,7 +67,7 @@ def flexibility_plans():
     if st.session_state.get('user_questions') is not None:
         if st.button("🚀 Generate Flexibility Plan", key="flexibility_generate_button"):
             answer = st.session_state['user_questions']
-            user_prompt = f"the user is {answer.get('email', 'unknown')} and the user is {answer.get('age', 'unknown')} years old, and the user is {answer.get('gender', 'unknown')} and the user {'has' if answer.get('gym_access') else 'does not have'} access to a gym and the user weighs {answer.get('weight', 'unknown')} pounds and the user is {answer.get('height', 'unknown')} feet tall and the user has allergies of {answer.get('allergies', [])} and the user's diet is {answer.get('diet', [])} and the user's health conditions are {answer.get('health', [])} and the user's goal is {answer.get('goal', 'unknown')} with a timeline of {answer.get('timeline', 'unknown')} and activity level is {answer.get('activity_level', 'unknown')} and sleep patterns are {answer.get('sleep_patterns', 'unknown')} and daily schedule is {answer.get('daily_schedule', 'unknown')}"
+            user_prompt = f"the user is {answer.get('email', 'unknown')} and the user is {answer.get('age', 'unknown')} years old, and the user is {answer.get('gender', 'unknown')} and the user {'has' if answer.get('gym_access') else 'does not have'} access to a gym and the user weighs {answer.get('weight', 'unknown')} pounds and the user is {answer.get('height', 'unknown')} feet tall and the user has allergies of {answer.get('allergies', [])} and the user's diet is {answer.get('diet', [])} and the user's health conditions are {answer.get('health', [])} and the user's goal is {answer.get('goal', 'unknown')} with a timeline of {answer.get('timeline', 'unknown')} and activity level is {answer.get('activity_level', 'unknown')} and sleep patterns are {answer.get('sleep_patterns', 'unknown')} and daily schedule is {answer.get('daily_schedule', 'unknown')}. IMPORTANT: Scale the flexibility routine frequency and session duration based on the timeline provided."
 
             response = get_json_response(system_prompt_flexibility, user_prompt)
 

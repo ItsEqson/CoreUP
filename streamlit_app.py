@@ -32,6 +32,9 @@ def initalize_state():
     if 'current_user' not in st.session_state:
         st.session_state['current_user'] = None
 
+    if 'current_user_id' not in st.session_state:
+        st.session_state['current_user_id'] = None
+
     if 'user_db' not in st.session_state:
         st.session_state['user_db'] = {"User1": "password1"}
     if 'needs_onboarding' not in st.session_state:
@@ -56,10 +59,22 @@ def login():
             if err:
                 st.error(f"Login failed: {err}")
             else:
+                user_id = getattr(user, 'id', None) or (user.get('id') if isinstance(user, dict) else None)
                 st.session_state['login_user'] = True
                 st.session_state['current_user'] = username
-                st.rerun()
+                st.session_state['current_user_id'] = user_id
 
+                profile = None
+                if user_id is not None:
+                    profile = get_profile(user_id)
+
+                if profile:
+                    st.session_state['needs_onboarding'] = False
+                    st.session_state['user_questions'] = profile
+                else:
+                    st.session_state['needs_onboarding'] = True
+
+                st.rerun()
 
 
 def signup():
@@ -73,14 +88,15 @@ def signup():
             if err:
                 st.error("Username already exists")
             else:
-                st.session_state['user_db'][new_username] = new_password
-
+                user_id = getattr(user, 'id', None) or (user.get('id') if isinstance(user, dict) else None)
                 st.session_state['login_user'] = True
                 st.session_state['current_user'] = new_username
+                st.session_state['current_user_id'] = user_id
 
                 st.session_state['needs_onboarding'] = True
+                st.session_state['user_questions'] = None
 
-                st.success("Account created successfully! Please log in.")
+                st.success("Account created successfully! Please complete onboarding.")
                 st.rerun()
 
 def logout():
