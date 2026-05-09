@@ -65,8 +65,9 @@ def save_profile(user_id: str, data: dict):
 
 def get_profile(user_id: str):
     """Return the profile row, or None if it doesn't exist yet."""
-    sb = get_supabase()
-    res = sb.table("profiles").select("*").eq("user_id", user_id).maybe_single().execute()
-    if res is None:
+    try:
+        sb = get_supabase()
+        res = sb.table("profiles").select("*").eq("user_id", user_id).maybe_single().execute()
+        return res.data if hasattr(res, 'data') else None
+    except Exception:
         return None
-    return getattr(res, 'data', None) or (res.get('data') if isinstance(res, dict) else None)
