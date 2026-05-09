@@ -52,10 +52,10 @@ def login():
         password = st.text_input("Enter your Password", type="password")
         
         if st.form_submit_button("Login"):
-            # user, err = sign_in(username, password)
-            # if err:
-            #     st.error(f"Login failed: {err}")
-            # else:
+            user, err = sign_in(username, password)
+            if err:
+                st.error(f"Login failed: {err}")
+            else:
                 st.session_state['login_user'] = True
                 st.session_state['current_user'] = username
                 st.rerun()
@@ -65,14 +65,14 @@ def login():
 def signup():
     with st.form("Signup Form"):
         st.title("Sign Up")
-        new_username = st.text_input("Choose a Username")
+        new_username = st.text_input("Choose a Email")
         new_password = st.text_input("Choose a Password", type="password")
         
         if st.form_submit_button("Sign Up"):
-            # user, err = sign_up(new_username, new_password)
-            # if err:
-            #     st.error("Username already exists")
-            # else:
+            user, err = sign_up(new_username, new_password)
+            if err:
+                st.error("Username already exists")
+            else:
                 st.session_state['user_db'][new_username] = new_password
 
                 st.session_state['login_user'] = True
