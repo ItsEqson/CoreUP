@@ -5,7 +5,7 @@ from db import save_profile
 
 def onboarding():
     with st.form("Question Form"):
-        email = st.text_input("Input your Email Address")
+        email = st.session_state['current_user']
 
         age = st.slider("Enter Your Age")
 
