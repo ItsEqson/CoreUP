@@ -40,7 +40,7 @@ def get_json_response(system_prompt, user_prompt):
     - (dict): A dictionary containing ChatGPT's response in the requested JSON format.
     """
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-5.4-nano-2026-03-17",
         response_format={ "type": "json_object" },
         messages=[
             {"role": "system", "content": system_prompt},
